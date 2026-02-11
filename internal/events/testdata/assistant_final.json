@@ -1,0 +1,1 @@
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Both commands have finished running: first `sleep 5`, then `sleep 3`, with no other actions taken."}]},"session_id":"d43015b9-0707-43f4-b2df-0bcea7891654"}

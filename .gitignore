@@ -4,3 +4,6 @@ build/
 .env
 *.log
 .DS_Store
+
+# Go
+cursor-wrap

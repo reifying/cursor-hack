@@ -1,0 +1,1 @@
+{"type":"user","message":{"role":"user","content":[{"type":"text","text":"Run `sleep 5` using bash, then run `sleep 3` using bash. Do nothing else."}]},"session_id":"d43015b9-0707-43f4-b2df-0bcea7891654"}
