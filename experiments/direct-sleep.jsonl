@@ -1,0 +1,220 @@
+{"type":"system","subtype":"init","apiKeySource":"login","cwd":"/Users/travisbrown/code/cursor-hack","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","model":"Auto","permissionMode":"default"}
+{"type":"user","message":{"role":"user","content":[{"type":"text","text":"Run `sleep 5` using bash, then run `sleep 3` using bash. Do nothing else."}]},"session_id":"d43015b9-0707-43f4-b2df-0bcea7891654"}
+{"type":"thinking","subtype":"delta","text":"**Planning","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841542}
+{"type":"thinking","subtype":"delta","text":" sequential","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841598}
+{"type":"thinking","subtype":"delta","text":" commands","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841598}
+{"type":"thinking","subtype":"delta","text":"**\n\nI","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841598}
+{"type":"thinking","subtype":"delta","text":" need","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841605}
+{"type":"thinking","subtype":"delta","text":" to","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841624}
+{"type":"thinking","subtype":"delta","text":" follow","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841628}
+{"type":"thinking","subtype":"delta","text":" instructions","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841644}
+{"type":"thinking","subtype":"delta","text":" carefully","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841648}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841661}
+{"type":"thinking","subtype":"delta","text":" The","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841669}
+{"type":"thinking","subtype":"delta","text":" user","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841681}
+{"type":"thinking","subtype":"delta","text":" wants","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841688}
+{"type":"thinking","subtype":"delta","text":" to","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841698}
+{"type":"thinking","subtype":"delta","text":" run","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841703}
+{"type":"thinking","subtype":"delta","text":" two","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841710}
+{"type":"thinking","subtype":"delta","text":" commands","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841721}
+{"type":"thinking","subtype":"delta","text":" sequential","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841751}
+{"type":"thinking","subtype":"delta","text":"ly","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841855}
+{"type":"thinking","subtype":"delta","text":":","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841855}
+{"type":"thinking","subtype":"delta","text":" `","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841855}
+{"type":"thinking","subtype":"delta","text":"sleep","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841855}
+{"type":"thinking","subtype":"delta","text":" 5","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841855}
+{"type":"thinking","subtype":"delta","text":"`","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841856}
+{"type":"thinking","subtype":"delta","text":" followed","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841856}
+{"type":"thinking","subtype":"delta","text":" by","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841861}
+{"type":"thinking","subtype":"delta","text":" `","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841868}
+{"type":"thinking","subtype":"delta","text":"sleep","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841885}
+{"type":"thinking","subtype":"delta","text":" 3","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841897}
+{"type":"thinking","subtype":"delta","text":"`","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841905}
+{"type":"thinking","subtype":"delta","text":" using","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841918}
+{"type":"thinking","subtype":"delta","text":" the","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841924}
+{"type":"thinking","subtype":"delta","text":" bash","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841941}
+{"type":"thinking","subtype":"delta","text":" tool","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841941}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841950}
+{"type":"thinking","subtype":"delta","text":" I","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841961}
+{"type":"thinking","subtype":"delta","text":" have","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841973}
+{"type":"thinking","subtype":"delta","text":" to","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841988}
+{"type":"thinking","subtype":"delta","text":" ensure","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841998}
+{"type":"thinking","subtype":"delta","text":" these","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842005}
+{"type":"thinking","subtype":"delta","text":" are","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842035}
+{"type":"thinking","subtype":"delta","text":" executed","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842045}
+{"type":"thinking","subtype":"delta","text":" one","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842057}
+{"type":"thinking","subtype":"delta","text":" after","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842063}
+{"type":"thinking","subtype":"delta","text":" the","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842073}
+{"type":"thinking","subtype":"delta","text":" other","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842086}
+{"type":"thinking","subtype":"delta","text":",","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842096}
+{"type":"thinking","subtype":"delta","text":" as","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842106}
+{"type":"thinking","subtype":"delta","text":" the","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842136}
+{"type":"thinking","subtype":"delta","text":" system","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842169}
+{"type":"thinking","subtype":"delta","text":" advises","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842190}
+{"type":"thinking","subtype":"delta","text":" against","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842198}
+{"type":"thinking","subtype":"delta","text":" long","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842215}
+{"type":"thinking","subtype":"delta","text":"-lived","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842224}
+{"type":"thinking","subtype":"delta","text":" processes","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842237}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842262}
+{"type":"thinking","subtype":"delta","text":" I","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842270}
+{"type":"thinking","subtype":"delta","text":"’ll","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842375}
+{"type":"thinking","subtype":"delta","text":" provide","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842376}
+{"type":"thinking","subtype":"delta","text":" brief","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842376}
+{"type":"thinking","subtype":"delta","text":" updates","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842376}
+{"type":"thinking","subtype":"delta","text":" after","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842399}
+{"type":"thinking","subtype":"delta","text":" each","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842407}
+{"type":"thinking","subtype":"delta","text":" execution","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842439}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842462}
+{"type":"thinking","subtype":"delta","text":" It","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842471}
+{"type":"thinking","subtype":"delta","text":" seems","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842481}
+{"type":"thinking","subtype":"delta","text":" I","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842489}
+{"type":"thinking","subtype":"delta","text":" need","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842498}
+{"type":"thinking","subtype":"delta","text":" to","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842506}
+{"type":"thinking","subtype":"delta","text":" clarify","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842516}
+{"type":"thinking","subtype":"delta","text":" that","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842524}
+{"type":"thinking","subtype":"delta","text":" \"","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842532}
+{"type":"thinking","subtype":"delta","text":"do","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842541}
+{"type":"thinking","subtype":"delta","text":" nothing","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842548}
+{"type":"thinking","subtype":"delta","text":" else","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842559}
+{"type":"thinking","subtype":"delta","text":"\"","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842568}
+{"type":"thinking","subtype":"delta","text":" pertains","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842584}
+{"type":"thinking","subtype":"delta","text":" to","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842595}
+{"type":"thinking","subtype":"delta","text":" avoiding","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842636}
+{"type":"thinking","subtype":"delta","text":" other","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842646}
+{"type":"thinking","subtype":"delta","text":" commands","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842653}
+{"type":"thinking","subtype":"delta","text":",","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842660}
+{"type":"thinking","subtype":"delta","text":" but","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842673}
+{"type":"thinking","subtype":"delta","text":" I","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842678}
+{"type":"thinking","subtype":"delta","text":" must","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842688}
+{"type":"thinking","subtype":"delta","text":" still","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842697}
+{"type":"thinking","subtype":"delta","text":" describe","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842705}
+{"type":"thinking","subtype":"delta","text":" the","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842715}
+{"type":"thinking","subtype":"delta","text":" process","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842726}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842728}
+{"type":"thinking","subtype":"delta","text":" So","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842737}
+{"type":"thinking","subtype":"delta","text":",","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842748}
+{"type":"thinking","subtype":"delta","text":" I'll","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842756}
+{"type":"thinking","subtype":"delta","text":" plan","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842767}
+{"type":"thinking","subtype":"delta","text":" to","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842797}
+{"type":"thinking","subtype":"delta","text":" execute","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842900}
+{"type":"thinking","subtype":"delta","text":" these","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842900}
+{"type":"thinking","subtype":"delta","text":" two","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842900}
+{"type":"thinking","subtype":"delta","text":" commands","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842900}
+{"type":"thinking","subtype":"delta","text":" sequential","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842900}
+{"type":"thinking","subtype":"delta","text":"ly","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842901}
+{"type":"thinking","subtype":"delta","text":" without","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842901}
+{"type":"thinking","subtype":"delta","text":" additional","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842902}
+{"type":"thinking","subtype":"delta","text":" actions","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842910}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823842939}
+{"type":"thinking","subtype":"delta","text":"\n**Executing","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843139}
+{"type":"thinking","subtype":"delta","text":" commands","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843147}
+{"type":"thinking","subtype":"delta","text":" sequential","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843156}
+{"type":"thinking","subtype":"delta","text":"ly","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843169}
+{"type":"thinking","subtype":"delta","text":"**\n\nI","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843218}
+{"type":"thinking","subtype":"delta","text":" need","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843225}
+{"type":"thinking","subtype":"delta","text":" to","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843239}
+{"type":"thinking","subtype":"delta","text":" remember","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843255}
+{"type":"thinking","subtype":"delta","text":" that","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843268}
+{"type":"thinking","subtype":"delta","text":" tools","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843275}
+{"type":"thinking","subtype":"delta","text":" are","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843288}
+{"type":"thinking","subtype":"delta","text":" state","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843294}
+{"type":"thinking","subtype":"delta","text":"ful","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843302}
+{"type":"thinking","subtype":"delta","text":",","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843312}
+{"type":"thinking","subtype":"delta","text":" which","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843321}
+{"type":"thinking","subtype":"delta","text":" simplifies","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843424}
+{"type":"thinking","subtype":"delta","text":" my","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843425}
+{"type":"thinking","subtype":"delta","text":" task","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843425}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843425}
+{"type":"thinking","subtype":"delta","text":" I","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843425}
+{"type":"thinking","subtype":"delta","text":" have","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843425}
+{"type":"thinking","subtype":"delta","text":" to","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843425}
+{"type":"thinking","subtype":"delta","text":" ensure","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843432}
+{"type":"thinking","subtype":"delta","text":" the","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843449}
+{"type":"thinking","subtype":"delta","text":" second","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843481}
+{"type":"thinking","subtype":"delta","text":" tool","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843513}
+{"type":"thinking","subtype":"delta","text":" call","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843543}
+{"type":"thinking","subtype":"delta","text":" happens","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843561}
+{"type":"thinking","subtype":"delta","text":" only","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843566}
+{"type":"thinking","subtype":"delta","text":" after","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843575}
+{"type":"thinking","subtype":"delta","text":" the","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843584}
+{"type":"thinking","subtype":"delta","text":" first","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843593}
+{"type":"thinking","subtype":"delta","text":" one","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843601}
+{"type":"thinking","subtype":"delta","text":" completes","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843609}
+{"type":"thinking","subtype":"delta","text":",","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843618}
+{"type":"thinking","subtype":"delta","text":" so","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843637}
+{"type":"thinking","subtype":"delta","text":" I'll","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843651}
+{"type":"thinking","subtype":"delta","text":" avoid","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843668}
+{"type":"thinking","subtype":"delta","text":" using","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843675}
+{"type":"thinking","subtype":"delta","text":" multi","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843683}
+{"type":"thinking","subtype":"delta","text":"_tool","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843689}
+{"type":"thinking","subtype":"delta","text":"_use","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843698}
+{"type":"thinking","subtype":"delta","text":".parallel","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843720}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843749}
+{"type":"thinking","subtype":"delta","text":" I","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843779}
+{"type":"thinking","subtype":"delta","text":"’ll","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843797}
+{"type":"thinking","subtype":"delta","text":" call","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843812}
+{"type":"thinking","subtype":"delta","text":" Shell","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843824}
+{"type":"thinking","subtype":"delta","text":" twice","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843839}
+{"type":"thinking","subtype":"delta","text":",","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843848}
+{"type":"thinking","subtype":"delta","text":" and","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843857}
+{"type":"thinking","subtype":"delta","text":" I","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843947}
+{"type":"thinking","subtype":"delta","text":" plan","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843947}
+{"type":"thinking","subtype":"delta","text":" to","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843948}
+{"type":"thinking","subtype":"delta","text":" keep","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843948}
+{"type":"thinking","subtype":"delta","text":" my","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843948}
+{"type":"thinking","subtype":"delta","text":" explanations","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843948}
+{"type":"thinking","subtype":"delta","text":" minimal","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823843971}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844009}
+{"type":"thinking","subtype":"delta","text":" Before","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844036}
+{"type":"thinking","subtype":"delta","text":" executing","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844068}
+{"type":"thinking","subtype":"delta","text":" the","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844101}
+{"type":"thinking","subtype":"delta","text":" first","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844164}
+{"type":"thinking","subtype":"delta","text":" tool","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844222}
+{"type":"thinking","subtype":"delta","text":" call","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844251}
+{"type":"thinking","subtype":"delta","text":",","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844258}
+{"type":"thinking","subtype":"delta","text":" I","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844273}
+{"type":"thinking","subtype":"delta","text":"’ll","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844279}
+{"type":"thinking","subtype":"delta","text":" state","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844286}
+{"type":"thinking","subtype":"delta","text":",","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844295}
+{"type":"thinking","subtype":"delta","text":" \"","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844303}
+{"type":"thinking","subtype":"delta","text":"I'll","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844324}
+{"type":"thinking","subtype":"delta","text":" run","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844330}
+{"type":"thinking","subtype":"delta","text":" `","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844338}
+{"type":"thinking","subtype":"delta","text":"sleep","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844346}
+{"type":"thinking","subtype":"delta","text":" 5","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844473}
+{"type":"thinking","subtype":"delta","text":"`,","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844473}
+{"type":"thinking","subtype":"delta","text":" then","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844473}
+{"type":"thinking","subtype":"delta","text":" `","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844708}
+{"type":"thinking","subtype":"delta","text":"sleep","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844708}
+{"type":"thinking","subtype":"delta","text":" 3","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844708}
+{"type":"thinking","subtype":"delta","text":"`,","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844708}
+{"type":"thinking","subtype":"delta","text":" via","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844709}
+{"type":"thinking","subtype":"delta","text":" bash","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844709}
+{"type":"thinking","subtype":"delta","text":".\"","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844709}
+{"type":"thinking","subtype":"delta","text":" After","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844723}
+{"type":"thinking","subtype":"delta","text":" that","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844749}
+{"type":"thinking","subtype":"delta","text":",","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844783}
+{"type":"thinking","subtype":"delta","text":" I","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844813}
+{"type":"thinking","subtype":"delta","text":"’ll","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844846}
+{"type":"thinking","subtype":"delta","text":" call","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844874}
+{"type":"thinking","subtype":"delta","text":" functions","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844894}
+{"type":"thinking","subtype":"delta","text":".S","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844996}
+{"type":"thinking","subtype":"delta","text":"hell","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844996}
+{"type":"thinking","subtype":"delta","text":" as","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823844996}
+{"type":"thinking","subtype":"delta","text":" instructed","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845044}
+{"type":"thinking","subtype":"delta","text":".","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845044}
+{"type":"thinking","subtype":"delta","text":" That","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845044}
+{"type":"thinking","subtype":"delta","text":" should","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845045}
+{"type":"thinking","subtype":"delta","text":" keep","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845045}
+{"type":"thinking","subtype":"delta","text":" everything","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845045}
+{"type":"thinking","subtype":"delta","text":" on","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845051}
+{"type":"thinking","subtype":"delta","text":" track","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845051}
+{"type":"thinking","subtype":"delta","text":"!","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845065}
+{"type":"thinking","subtype":"completed","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845095}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"I’ll run `sleep 5` in bash, wait for it to finish, then run `sleep 3` in bash."}]},"session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","model_call_id":"5bf03e32-be64-48d4-a5ed-c4a0a939b88c-0-otyz","timestamp_ms":1770823845357}
+{"type":"tool_call","subtype":"started","call_id":"call_PFAupCWibROFKbdASSdiHCoi\nfc_0d2609f619ccdca801698ca0a51c6481a0aaa34fcf724631a9","tool_call":{"shellToolCall":{"args":{"command":"sleep 5","workingDirectory":"","timeout":10000,"toolCallId":"call_PFAupCWibROFKbdASSdiHCoi\nfc_0d2609f619ccdca801698ca0a51c6481a0aaa34fcf724631a9","simpleCommands":["sleep"],"hasInputRedirect":false,"hasOutputRedirect":false,"parsingResult":{"parsingFailed":false,"executableCommands":[{"name":"sleep","args":[{"type":"number","value":"5"}],"fullText":"sleep 5"}],"hasRedirects":false,"hasCommandSubstitution":false},"fileOutputThresholdBytes":"0","isBackground":false,"skipApproval":false,"timeoutBehavior":"TIMEOUT_BEHAVIOR_BACKGROUND"}}},"model_call_id":"5bf03e32-be64-48d4-a5ed-c4a0a939b88c-0-otyz","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845357}
+{"type":"tool_call","subtype":"completed","call_id":"call_PFAupCWibROFKbdASSdiHCoi\nfc_0d2609f619ccdca801698ca0a51c6481a0aaa34fcf724631a9","tool_call":{"shellToolCall":{"args":{"command":"sleep 5","workingDirectory":"","timeout":10000,"toolCallId":"call_PFAupCWibROFKbdASSdiHCoi\nfc_0d2609f619ccdca801698ca0a51c6481a0aaa34fcf724631a9","simpleCommands":["sleep"],"hasInputRedirect":false,"hasOutputRedirect":false,"parsingResult":{"parsingFailed":false,"executableCommands":[{"name":"sleep","args":[{"type":"number","value":"5"}],"fullText":"sleep 5"}],"hasRedirects":false,"hasCommandSubstitution":false},"fileOutputThresholdBytes":"0","isBackground":false,"skipApproval":false,"timeoutBehavior":"TIMEOUT_BEHAVIOR_BACKGROUND"},"result":{"success":{"command":"sleep 5","workingDirectory":"","exitCode":0,"signal":"","stdout":"","stderr":"","executionTime":5399,"interleavedOutput":""},"isBackground":false}}},"model_call_id":"5bf03e32-be64-48d4-a5ed-c4a0a939b88c-0-otyz","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823850766}
+{"type":"tool_call","subtype":"started","call_id":"call_pupgFL8Ql8xfqbnWylZPfmd1\nfc_0d2609f619ccdca801698ca0ace0ec81a0974879c9821e9992","tool_call":{"shellToolCall":{"args":{"command":"sleep 3","workingDirectory":"","timeout":10000,"toolCallId":"call_pupgFL8Ql8xfqbnWylZPfmd1\nfc_0d2609f619ccdca801698ca0ace0ec81a0974879c9821e9992","simpleCommands":["sleep"],"hasInputRedirect":false,"hasOutputRedirect":false,"parsingResult":{"parsingFailed":false,"executableCommands":[{"name":"sleep","args":[{"type":"number","value":"3"}],"fullText":"sleep 3"}],"hasRedirects":false,"hasCommandSubstitution":false},"fileOutputThresholdBytes":"0","isBackground":false,"skipApproval":false,"timeoutBehavior":"TIMEOUT_BEHAVIOR_BACKGROUND"}}},"model_call_id":"5bf03e32-be64-48d4-a5ed-c4a0a939b88c-1-ytm4","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823853543}
+{"type":"tool_call","subtype":"completed","call_id":"call_pupgFL8Ql8xfqbnWylZPfmd1\nfc_0d2609f619ccdca801698ca0ace0ec81a0974879c9821e9992","tool_call":{"shellToolCall":{"args":{"command":"sleep 3","workingDirectory":"","timeout":10000,"toolCallId":"call_pupgFL8Ql8xfqbnWylZPfmd1\nfc_0d2609f619ccdca801698ca0ace0ec81a0974879c9821e9992","simpleCommands":["sleep"],"hasInputRedirect":false,"hasOutputRedirect":false,"parsingResult":{"parsingFailed":false,"executableCommands":[{"name":"sleep","args":[{"type":"number","value":"3"}],"fullText":"sleep 3"}],"hasRedirects":false,"hasCommandSubstitution":false},"fileOutputThresholdBytes":"0","isBackground":false,"skipApproval":false,"timeoutBehavior":"TIMEOUT_BEHAVIOR_BACKGROUND"},"result":{"success":{"command":"sleep 3","workingDirectory":"","exitCode":0,"signal":"","stdout":"","stderr":"","executionTime":3159,"interleavedOutput":""},"isBackground":false}}},"model_call_id":"5bf03e32-be64-48d4-a5ed-c4a0a939b88c-1-ytm4","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823856707}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Both commands have finished running: first `sleep 5`, then `sleep 3`, with no other actions taken."}]},"session_id":"d43015b9-0707-43f4-b2df-0bcea7891654"}
+{"type":"result","subtype":"success","duration_ms":21509,"duration_api_ms":21509,"is_error":false,"result":"I’ll run `sleep 5` in bash, wait for it to finish, then run `sleep 3` in bash.Both commands have finished running: first `sleep 5`, then `sleep 3`, with no other actions taken.","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","request_id":"5bf03e32-be64-48d4-a5ed-c4a0a939b88c"}
