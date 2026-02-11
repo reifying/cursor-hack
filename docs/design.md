@@ -249,14 +249,18 @@ type AnnotatedEvent struct {
 }
 
 // Reader reads from an io.Reader and emits AnnotatedEvents on a channel.
-// It closes the channel when the reader hits EOF or the context is cancelled.
-func Reader(ctx context.Context, r io.Reader, out chan<- AnnotatedEvent) error
+// It closes the out channel when the reader hits EOF or the context is
+// cancelled, signaling downstream that the stream is done. Any fatal
+// read error (not EOF, not context cancellation) is sent on errCh
+// before closing out.
+func Reader(ctx context.Context, r io.Reader, out chan<- AnnotatedEvent, errCh chan<- error)
 ```
 
 Key behaviors:
 - Lines that fail JSON parsing are logged at `warn` level and skipped (handles the `T: ...` free-plan error lines)
 - The raw bytes are always preserved, even for parse failures
-- Channel is closed on EOF or context cancellation, signaling downstream that the stream is done
+- Fatal read errors (e.g. broken pipe) are sent on `errCh` so the orchestrator can act on them
+- Channel `out` is closed on EOF or context cancellation, signaling downstream that the stream is done
 
 ### Hang Monitor (`internal/monitor/`)
 
@@ -384,21 +388,43 @@ The file sink writes JSONL. The console sink writes human-readable text. Both ar
 
 The file is opened in append mode with `O_SYNC` to minimize data loss on crash. Filename format: `cursor-wrap-{start_ts}-{session_id}.jsonl`. If session_id is not yet known (before system/init), the file starts with a placeholder and is renamed once the session_id arrives.
 
-#### Timestamp serialization
+#### Log record formats
 
-All timestamps in log output use **Unix milliseconds (int64)**, matching cursor-agent's own `timestamp_ms` field. This makes it trivial to diff wrapper receive times against agent-reported times with simple arithmetic:
+The file sink contains two kinds of JSONL records, distinguished by the presence of the `"raw"` key:
+
+**Raw event capture** (`logRawEvent`): preserves the entire cursor-agent event verbatim inside a `"raw"` field, per @logging.md. This is the forensic replay record.
 
 ```json
-{"level":"DEBUG","msg":"event_received","recv_ts":1770823845400,"agent_ts":1770823845357,"type":"tool_call","subtype":"started"}
+{"recv_ts":1770823845400,"raw":{"type":"tool_call","subtype":"started","call_id":"call_xxx","timestamp_ms":1770823845357,...}}
 ```
 
-The `AnnotatedEvent.RecvTime` field is `time.Time` internally for clean Go APIs, but serialized as `recv_ts` (epoch millis) when written to the log file. Conversion: `ev.RecvTime.UnixMilli()`.
+**Wrapper decision records**: standard `slog` structured log entries for state transitions, hang detection verdicts, and process lifecycle events. These do NOT contain a `"raw"` field.
+
+```json
+{"level":"INFO","msg":"tool_call_opened","ts":1770823845400,"call_id":"call_xxx","command":"sleep 5","timeout_ms":10000}
+{"level":"ERROR","msg":"hang_detected","ts":1770823900000,"idle_silence_ms":55000,"open_call_count":0,"last_event_type":"thinking"}
+```
+
+#### Timestamp serialization
+
+All timestamps use **Unix milliseconds (int64)**, matching cursor-agent's own `timestamp_ms` field. This makes it trivial to diff wrapper receive times against agent-reported times with simple arithmetic.
+
+- Raw event records: `recv_ts` field (wrapper wall-clock at receive)
+- Wrapper decision records: `ts` field (wrapper wall-clock at decision point)
+- Agent timestamps: preserved as-is inside the `raw` object
+
+The `AnnotatedEvent.RecvTime` field is `time.Time` internally for clean Go APIs, but serialized as epoch millis when written to the log file. Conversion: `ev.RecvTime.UnixMilli()`.
 
 ### Orchestrator (in `cmd/cursor-wrap/main.go`)
 
 The main function wires the components together:
 
 ```go
+var (
+    ErrHangDetected = errors.New("hang detected")
+    ErrAbnormalExit = errors.New("abnormal exit")
+)
+
 func run(ctx context.Context, cfg Config) error {
     log, teardown := logger.Setup(cfg.Log)
     defer teardown()
@@ -407,60 +433,81 @@ func run(ctx context.Context, cfg Config) error {
     if err != nil { return err }
 
     eventCh := make(chan events.AnnotatedEvent, 64)
+    readerErrCh := make(chan error, 1)
     mon := monitor.NewMonitor(cfg.IdleTimeout, cfg.ToolGrace)
 
-    // Goroutine: read stdout → parse → channel
-    go events.Reader(ctx, sess.Stdout, eventCh)
+    // Track goroutines so we can wait for them before teardown.
+    var wg sync.WaitGroup
 
-    // Goroutine: drain stderr to prevent pipe buffer deadlock.
-    // Stderr mirrors stdout in stream-json mode; we log it at debug
-    // level but do not parse or forward it.
-    go drainStderr(ctx, sess.Stderr, log)
+    wg.Add(1)
+    go func() {
+        defer wg.Done()
+        events.Reader(ctx, sess.Stdout, eventCh, readerErrCh)
+    }()
+
+    wg.Add(1)
+    go func() {
+        defer wg.Done()
+        drainStderr(ctx, sess.Stderr, log)
+    }()
 
     ticker := time.NewTicker(cfg.TickInterval)
     defer ticker.Stop()
 
-    for {
+    var runErr error
+    for runErr == nil {
         select {
         case ev, ok := <-eventCh:
             if !ok {
-                // Stream closed (process exited or EOF)
-                return handleStreamEnd(ctx, sess, mon, log)
+                // Stream closed (process exited or EOF).
+                runErr = handleStreamEnd(sess, mon, log)
+            } else {
+                logRawEvent(log, ev)
+                forwardToStdout(ev.Raw)
+                verdict := mon.ProcessEvent(ev)
+                logVerdict(log, verdict, ev)
             }
-            logRawEvent(log, ev)
-            forwardToStdout(ev.Raw)
-            verdict := mon.ProcessEvent(ev)
-            logVerdict(log, verdict, ev)
+
+        case err := <-readerErrCh:
+            log.Error("event reader failed", "error", err)
+            runErr = sess.Kill("reader error")
 
         case <-ticker.C:
             verdict, reason := mon.CheckTimeout(mon.Now())
             if verdict == monitor.VerdictHang {
                 log.Error("hang detected", reasonAttrs(reason)...)
-                return sess.Kill(reason.String())
+                runErr = sess.Kill(reason.String())
             }
 
         case <-ctx.Done():
-            return sess.Kill("context cancelled")
+            runErr = sess.Kill("context cancelled")
         }
     }
+
+    // Wait for both goroutines to finish before teardown closes
+    // the log file. Both will exit promptly: the reader sees EOF
+    // or context cancellation, and drainStderr sees stderr close
+    // after the process exits.
+    wg.Wait()
+    return runErr
 }
 
 // handleStreamEnd is called when the event channel closes (stdout EOF).
 // This means cursor-agent's stdout pipe is closed — the process is exiting
 // or has exited.
-func handleStreamEnd(ctx context.Context, sess *process.Session, mon *monitor.Monitor, log *slog.Logger) error {
-    state, err := sess.Wait()
+func handleStreamEnd(sess *process.Session, mon *monitor.Monitor, log *slog.Logger) error {
+    ps, err := sess.Wait()
     if err != nil {
         log.Error("process wait failed", "error", err)
+        // ps may be nil on wait failure — log what we can and treat as abnormal.
+        return fmt.Errorf("waiting for cursor-agent: %w", err)
     }
-    exitCode := state.ExitCode()
+    exitCode := ps.ExitCode()
     log.Info("cursor-agent exited", "exit_code", exitCode, "session_done", mon.SessionDone())
 
     if mon.SessionDone() {
-        // result event was received — normal completion
         return nil
     }
-    // Stream ended without a result event — abnormal exit
     return fmt.Errorf("cursor-agent exited (code %d) without emitting a result event: %w",
         exitCode, ErrAbnormalExit)
 }
@@ -479,14 +526,16 @@ func drainStderr(ctx context.Context, r io.Reader, log *slog.Logger) {
 ```
 
 Key behaviors:
-- Every raw event is logged to file before any processing
+- Every raw event is logged to file (as a `raw` record) before any processing
 - Every raw event is forwarded to the wrapper's own stdout so callers see the same stream
 - Stderr is drained in a separate goroutine to prevent pipe buffer deadlock; lines are logged at debug level
 - On hang: kill the process, log the full reason, exit with a non-zero status
 - On normal completion (result event received, then EOF): exit 0
-- On abnormal EOF (stream ends without result event): exit with error
+- On abnormal EOF (stream ends without result event): exit with `ErrAbnormalExit`
+- On reader error: kill the process, log the error, exit
 - On context cancellation (e.g. SIGINT to the wrapper): kill the child, exit
 - The monitor's injectable clock (`mon.Now()`) is used for timeout checks, keeping production and test code on the same path
+- Both background goroutines are tracked with `sync.WaitGroup` and joined before `teardown()` runs, ensuring the log file stays open until all goroutines finish writing
 
 ### CLI Flags (`cmd/cursor-wrap/`)
 
