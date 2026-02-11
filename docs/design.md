@@ -256,7 +256,7 @@ type AnnotatedEvent struct {
 func Reader(ctx context.Context, r io.Reader, out chan<- AnnotatedEvent, errCh chan<- error)
 ```
 
-Key behaviors:
+**Key behaviors** (Event Reader):
 - Lines that fail JSON parsing are logged at `warn` level and skipped (handles the `T: ...` free-plan error lines)
 - The raw bytes are always preserved, even for parse failures
 - Fatal read errors (e.g. broken pipe) are sent on `errCh` so the orchestrator can act on them
@@ -476,11 +476,13 @@ func run(ctx context.Context, cfg Config) error {
             verdict, reason := mon.CheckTimeout(mon.Now())
             if verdict == monitor.VerdictHang {
                 log.Error("hang detected", reasonAttrs(reason)...)
-                runErr = sess.Kill(reason.String())
+                _ = sess.Kill(reason.String())
+                runErr = ErrHangDetected
             }
 
         case <-ctx.Done():
-            runErr = sess.Kill("context cancelled")
+            _ = sess.Kill("context cancelled")
+            runErr = ctx.Err()
         }
     }
 
@@ -514,9 +516,17 @@ func handleStreamEnd(sess *process.Session, mon *monitor.Monitor, log *slog.Logg
 
 // drainStderr reads and discards stderr, logging each line at debug level.
 // This prevents the child process from blocking on a full stderr pipe buffer.
+// The context check inside the loop ensures prompt exit on cancellation,
+// even if the stderr pipe hasn't closed yet (belt-and-suspenders with
+// sess.Kill closing the pipe).
 func drainStderr(ctx context.Context, r io.Reader, log *slog.Logger) {
     scanner := bufio.NewScanner(r)
     for scanner.Scan() {
+        select {
+        case <-ctx.Done():
+            return
+        default:
+        }
         log.Debug("stderr", "line", scanner.Text())
     }
     if err := scanner.Err(); err != nil && ctx.Err() == nil {
@@ -525,17 +535,90 @@ func drainStderr(ctx context.Context, r io.Reader, log *slog.Logger) {
 }
 ```
 
-Key behaviors:
+#### Orchestrator helpers
+
+```go
+// logRawEvent writes a raw event capture record to the file sink.
+// This is the forensic replay record — it writes synchronously to the
+// O_SYNC file before any further processing, ensuring the event is
+// persisted even if the wrapper crashes immediately after.
+// Format: {"recv_ts":<epoch_ms>,"raw":<verbatim event JSON>}
+func logRawEvent(log *slog.Logger, ev events.AnnotatedEvent) {
+    log.Debug("raw_event",
+        "recv_ts", ev.RecvTime.UnixMilli(),
+        slog.Any("raw", json.RawMessage(ev.Raw)),
+    )
+}
+
+// forwardToStdout writes the raw JSON line to the wrapper's stdout,
+// preserving byte-identical output for downstream callers.
+func forwardToStdout(raw []byte) {
+    os.Stdout.Write(raw)
+    os.Stdout.Write([]byte("\n"))
+}
+
+// logVerdict logs the monitor's verdict for non-OK results.
+// VerdictWaiting is logged at debug level (expected during tool execution).
+// VerdictOK is not logged (too noisy for every event).
+func logVerdict(log *slog.Logger, v monitor.Verdict, ev events.AnnotatedEvent) {
+    if v == monitor.VerdictWaiting {
+        log.Debug("verdict_waiting", "event_type", ev.Parsed.Type)
+    }
+}
+
+// reasonAttrs converts a Reason into slog key-value pairs for structured logging.
+func reasonAttrs(r monitor.Reason) []any {
+    attrs := []any{
+        "idle_silence_ms", r.IdleSilenceMS,
+        "open_call_count", r.OpenCallCount,
+        "last_event_type", r.LastEventType,
+    }
+    for i, c := range r.OpenCalls {
+        prefix := fmt.Sprintf("open_call_%d", i)
+        attrs = append(attrs,
+            prefix+"_id", c.CallID,
+            prefix+"_command", c.Command,
+            prefix+"_elapsed_ms", c.ElapsedMS,
+            prefix+"_timeout_ms", c.TimeoutMS,
+        )
+    }
+    return attrs
+}
+```
+
+**Key behaviors** (Orchestrator):
 - Every raw event is logged to file (as a `raw` record) before any processing
 - Every raw event is forwarded to the wrapper's own stdout so callers see the same stream
 - Stderr is drained in a separate goroutine to prevent pipe buffer deadlock; lines are logged at debug level
-- On hang: kill the process, log the full reason, exit with a non-zero status
+- On hang: kill the process, log the full reason, return `ErrHangDetected` so callers can distinguish hangs from other failures
 - On normal completion (result event received, then EOF): exit 0
 - On abnormal EOF (stream ends without result event): exit with `ErrAbnormalExit`
 - On reader error: kill the process, log the error, exit
-- On context cancellation (e.g. SIGINT to the wrapper): kill the child, exit
+- On context cancellation (e.g. SIGINT to the wrapper): kill the child, return the context error
 - The monitor's injectable clock (`mon.Now()`) is used for timeout checks, keeping production and test code on the same path
 - Both background goroutines are tracked with `sync.WaitGroup` and joined before `teardown()` runs, ensuring the log file stays open until all goroutines finish writing
+
+#### Signal handling
+
+The wrapper must handle OS signals (SIGINT, SIGTERM) to ensure the child process is killed cleanly before the wrapper exits. This is done in `main()` using `signal.NotifyContext`, which cancels the context on signal receipt:
+
+```go
+func main() {
+    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+    defer stop()
+
+    cfg := parseFlags()
+    if err := run(ctx, cfg); err != nil {
+        slog.Error("fatal", "error", err)
+        if errors.Is(err, ErrHangDetected) {
+            os.Exit(2)
+        }
+        os.Exit(1)
+    }
+}
+```
+
+When a signal arrives, `ctx` is cancelled, which triggers the `case <-ctx.Done()` branch in the orchestrator's select loop. This kills the child process and returns `ctx.Err()`. The exit code distinguishes hang detection (exit 2) from other failures (exit 1) and normal completion (exit 0).
 
 ### CLI Flags (`cmd/cursor-wrap/`)
 

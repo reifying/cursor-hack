@@ -24,9 +24,10 @@ Log every internal state change with the event that caused it:
 - Session lifecycle: init received, result received, process exited, process killed
 - Decision points: "no events for 45s, 2 open tool calls with max timeout 30s → declaring hang"
 
-Format: structured JSON with a `wrapper_event` type field distinct from raw cursor-agent events:
+Format: standard `slog` structured JSON records. Distinguished from raw event capture records by the presence of `level`/`msg` fields (and absence of `raw`):
 ```json
-{"ts": 1770823900000, "wrapper_event": "hang_detected", "reason": "no_events_beyond_tool_timeout", "open_calls": ["call_abc"], "silence_ms": 45000, "max_tool_timeout_ms": 30000}
+{"level":"INFO","msg":"tool_call_opened","ts":1770823845400,"call_id":"call_xxx","command":"sleep 5","timeout_ms":10000}
+{"level":"ERROR","msg":"hang_detected","ts":1770823900000,"idle_silence_ms":45000,"open_call_count":2,"last_event_type":"tool_call"}
 ```
 
 ### Process-level events
