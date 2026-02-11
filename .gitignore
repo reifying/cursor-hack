@@ -5,5 +5,5 @@ build/
 *.log
 .DS_Store
 
-# Go
-cursor-wrap
+# Go compiled binary (anchored to repo root, not cmd/cursor-wrap/)
+/cursor-wrap
