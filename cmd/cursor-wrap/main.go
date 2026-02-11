@@ -34,28 +34,6 @@ type TurnResult struct {
 	Reason    monitor.Reason // populated when Err is ErrHangDetected
 }
 
-// Config holds all configuration for the wrapper.
-type Config struct {
-	// Mode
-	Print        bool   // -p: non-interactive, single prompt
-	OutputFormat string // "stream-json" or "text"
-
-	// Hang detection
-	IdleTimeout  time.Duration
-	ToolGrace    time.Duration
-	TickInterval time.Duration
-
-	// Logging
-	Log logger.LogConfig
-
-	// Process
-	Process process.Config
-
-	// Prompt input
-	PositionalPrompt string        // trailing arg, if any
-	PromptReader     *bufio.Reader // wraps os.Stdin
-}
-
 // isTerminal reports whether the given file descriptor is connected to a terminal.
 // This is a variable so tests can override it.
 var isTerminal = func(f *os.File) bool {
@@ -77,24 +55,6 @@ func main() {
 			os.Exit(2)
 		}
 		os.Exit(1)
-	}
-}
-
-// parseFlags is a placeholder — implemented in cw-fjr.7.
-func parseFlags(_ []string) Config {
-	return Config{
-		IdleTimeout:  60 * time.Second,
-		ToolGrace:    30 * time.Second,
-		TickInterval: 5 * time.Second,
-		OutputFormat: "text",
-		Log: logger.LogConfig{
-			ConsoleLevel: slog.LevelWarn,
-			FileLevel:    slog.LevelDebug,
-		},
-		Process: process.Config{
-			Force: true,
-		},
-		PromptReader: bufio.NewReader(os.Stdin),
 	}
 }
 
