@@ -36,6 +36,19 @@ echo "Do something" | cursor-agent --print --output-format stream-json --model a
 cursor-agent --print --output-format stream-json --model auto --force "Do something"
 ```
 
+## Session Resume (`--resume`)
+
+The `--resume <chatId>` flag resumes a previous session. Verified behavior with `--print --output-format stream-json`:
+
+- The event stream format is **identical** to a fresh session: `system/init` → `user` → `thinking` → `assistant` → `result`
+- The `session_id` in `system/init` is the **same** as the original session
+- Conversation history is preserved — the agent remembers prior turns
+- Prompt delivery works via **stdin pipe** (`echo "..." | cursor-agent --resume <id>`) or **positional arg with stdin closed** (`cursor-agent --resume <id> "..." </dev/null`)
+- Positional arg **without** closing stdin **hangs** — cursor-agent waits for stdin EOF before proceeding (same behavior as without `--resume`)
+- Each resumed turn is a separate process invocation
+
+The `ls` subcommand (`cursor-agent ls`) requires an interactive terminal (raw mode) and cannot be used from scripts.
+
 ## Account Constraints
 
 - Free plan: only `auto` model works; named models (e.g. `gemini-3-flash`) return an error message instead of structured events

@@ -13,6 +13,7 @@ cmd/
 
 internal/
 ├── events/                # JSON event types and parser for stream-json output
+├── format/                # Output formatting — stream-json passthrough or text rendering
 ├── monitor/               # Hang detection state machine
 ├── process/               # Child process spawn, kill, wait
 └── logger/                # Structured logging setup
