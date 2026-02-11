@@ -147,11 +147,13 @@ func runTurn(ctx context.Context, procCfg process.Config, fmtr format.Formatter,
 	defer ticker.Stop()
 
 	var runErr error
-	for runErr == nil {
+	streamDone := false
+	for runErr == nil && !streamDone {
 		select {
 		case ev, ok := <-eventCh:
 			if !ok {
 				runErr = handleStreamEnd(sess, mon, log)
+				streamDone = true
 			} else {
 				logRawEvent(log, ev)
 				if err := fmtr.WriteEvent(ev); err != nil {

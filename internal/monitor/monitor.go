@@ -93,10 +93,10 @@ func WithClock(c Clock) Option {
 // State is the hang monitor's internal state.
 type State struct {
 	OpenCalls   map[string]*OpenToolCall // keyed by call_id
-	LastEventAt time.Time               // wall-clock time of last event received
-	LastEvType  string                  // "type" or "type/subtype"
-	SessionDone bool                    // true after result event
-	SessionID   string                  // from system/init
+	LastEventAt time.Time                // wall-clock time of last event received
+	LastEvType  string                   // "type" or "type/subtype"
+	SessionDone bool                     // true after result event
+	SessionID   string                   // from system/init
 }
 
 // Monitor is the hang detection state machine. It consumes annotated events,
