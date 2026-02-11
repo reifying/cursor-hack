@@ -1,4 +1,4 @@
-{"type":"system","subtype":"init","apiKeySource":"login","cwd":"/Users/travisbrown/code/cursor-hack","session_id":"a41193d9-b74e-4867-bf36-35e1c76ba3ef","model":"Auto","permissionMode":"default"}
+{"type":"system","subtype":"init","apiKeySource":"login","cwd":"/home/user/project","session_id":"a41193d9-b74e-4867-bf36-35e1c76ba3ef","model":"Auto","permissionMode":"default"}
 {"type":"user","message":{"role":"user","content":[{"type":"text","text":"Create a subagent using the Task tool. The subagent should run the bash command `sleep 10`. Wait for the subagent to finish, then respond with the word \"complete\"."}]},"session_id":"a41193d9-b74e-4867-bf36-35e1c76ba3ef"}
 {"type":"thinking","subtype":"delta","text":"**Following","session_id":"a41193d9-b74e-4867-bf36-35e1c76ba3ef","timestamp_ms":1770823904243}
 {"type":"thinking","subtype":"delta","text":" developer","session_id":"a41193d9-b74e-4867-bf36-35e1c76ba3ef","timestamp_ms":1770823904243}

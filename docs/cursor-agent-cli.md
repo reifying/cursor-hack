@@ -2,7 +2,7 @@
 
 ## Binary
 
-- **Path**: `/Users/travisbrown/.local/bin/cursor-agent`
+- **Path**: `~/.local/bin/cursor-agent`
 - **Type**: Bash wrapper that execs a bundled Node.js app
 - **Entry**: `$SCRIPT_DIR/index.js` (webpack-bundled, single-line minified)
 - **Node**: Ships its own `node` binary alongside `index.js`

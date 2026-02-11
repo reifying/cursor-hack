@@ -1,4 +1,4 @@
-{"type":"system","subtype":"init","apiKeySource":"login","cwd":"/Users/travisbrown/code/cursor-hack","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","model":"Auto","permissionMode":"default"}
+{"type":"system","subtype":"init","apiKeySource":"login","cwd":"/home/user/project","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","model":"Auto","permissionMode":"default"}
 {"type":"user","message":{"role":"user","content":[{"type":"text","text":"Run `sleep 5` using bash, then run `sleep 3` using bash. Do nothing else."}]},"session_id":"d43015b9-0707-43f4-b2df-0bcea7891654"}
 {"type":"thinking","subtype":"delta","text":"**Planning","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823841542}
 {"type":"thinking","subtype":"completed","session_id":"d43015b9-0707-43f4-b2df-0bcea7891654","timestamp_ms":1770823845095}

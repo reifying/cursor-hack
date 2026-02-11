@@ -7,3 +7,6 @@ build/
 
 # Go compiled binary (anchored to repo root, not cmd/cursor-wrap/)
 /cursor-wrap
+
+# Beads task tracker (local project management data)
+.beads/
