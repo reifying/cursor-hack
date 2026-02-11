@@ -9,7 +9,10 @@ docs/
 ├── README.md              # This file — index of all docs
 ├── cursor-agent-cli.md    # CLI interface, flags, invocation patterns
 ├── stream-json-events.md  # Event types and schemas for stream-json output
-└── hang-detection.md      # Analysis of hang vs. long-running-tool signals
+├── hang-detection.md      # Analysis of hang vs. long-running-tool signals
+├── logging.md             # Logging requirements and format spec
+├── coding-standards.md    # Go coding standards for this project
+└── design.md              # Detailed design for the hang detection wrapper
 
 experiments/               # Raw experiment JSONL logs (one JSON object per line)
 ├── direct-sleep.jsonl     # Sequential: sleep 5 then sleep 3
