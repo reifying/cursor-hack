@@ -65,6 +65,7 @@ func parseFlags(args []string) Config {
 	model := fs.String("model", "", "Model to pass to cursor-agent")
 	workspace := fs.String("workspace", "", "Workspace directory for cursor-agent")
 	force := fs.Bool("force", true, "Pass --force to cursor-agent")
+	resume := fs.String("resume", "", "Session ID to resume from a previous session")
 
 	// Split args at "--" separator before parsing. Everything after "--"
 	// goes to cursor-agent as ExtraFlags.
@@ -135,6 +136,7 @@ func parseFlags(args []string) Config {
 			Workspace:  *workspace,
 			ExtraFlags: extraFlags,
 			Force:      *force,
+			SessionID:  *resume,
 		},
 		PositionalPrompt: positionalPrompt,
 		PromptReader:     bufio.NewReader(os.Stdin),

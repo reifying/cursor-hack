@@ -511,6 +511,44 @@ func TestIntegration_SignalHandling(t *testing.T) {
 	// for the child and cleaned up. This is sufficient.
 }
 
+// --- Integration test: --resume on initial invocation ---
+
+func TestIntegration_ResumeOnFirstTurn(t *testing.T) {
+	logDir := t.TempDir()
+
+	cmd := exec.Command(wrapperBin,
+		"-p",
+		"--agent-bin", fakeAgentBin,
+		"--idle-timeout", "5s",
+		"--tool-grace", "1s",
+		"--tick-interval", "500ms",
+		"--log-dir", logDir,
+		"--output-format", "stream-json",
+		"--resume", "sess-pre-seeded-456",
+		"continue where we left off",
+	)
+	cmd.Env = append(os.Environ(), "FAKE_AGENT_SCENARIO=normal")
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		t.Fatalf("wrapper exited with error: %v\nstderr: %s", err, stderr.String())
+	}
+
+	// Verify --resume was passed to cursor-agent on the first (and only) turn
+	// by checking the log file where fake-agent's stderr (args) are captured.
+	logContent := readLogFile(t, logDir)
+	if !strings.Contains(logContent, "--resume") {
+		t.Errorf("expected --resume in log file for first turn\nlog:\n%s", logContent)
+	}
+	if !strings.Contains(logContent, "sess-pre-seeded-456") {
+		t.Errorf("expected sess-pre-seeded-456 in log file\nlog:\n%s", logContent)
+	}
+}
+
 // --- Integration test: -p flag behavior (AC #14) ---
 
 func TestIntegration_PrintModeSingleTurn(t *testing.T) {

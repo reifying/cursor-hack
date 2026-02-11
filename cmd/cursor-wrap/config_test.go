@@ -58,6 +58,7 @@ func TestParseFlags_AllFlagsParsed(t *testing.T) {
 		"--model", "gpt-4",
 		"--workspace", "/home/user/project",
 		"--force=false",
+		"--resume", "sess-existing-123",
 		"my prompt here",
 	})
 
@@ -96,6 +97,9 @@ func TestParseFlags_AllFlagsParsed(t *testing.T) {
 	}
 	if cfg.Process.Force {
 		t.Error("expected Force=false")
+	}
+	if cfg.Process.SessionID != "sess-existing-123" {
+		t.Errorf("SessionID = %q, want %q", cfg.Process.SessionID, "sess-existing-123")
 	}
 	if cfg.PositionalPrompt != "my prompt here" {
 		t.Errorf("PositionalPrompt = %q, want %q", cfg.PositionalPrompt, "my prompt here")
@@ -207,6 +211,20 @@ func TestParseFlags_LogDirDefault(t *testing.T) {
 	cfg := parseFlags([]string{})
 	if cfg.Log.Dir == "" {
 		t.Error("Log.Dir should have a default value")
+	}
+}
+
+func TestParseFlags_ResumeFlag(t *testing.T) {
+	cfg := parseFlags([]string{"-p", "--resume", "sess-abc-123", "hello"})
+	if cfg.Process.SessionID != "sess-abc-123" {
+		t.Errorf("Process.SessionID = %q, want %q", cfg.Process.SessionID, "sess-abc-123")
+	}
+}
+
+func TestParseFlags_ResumeFlag_Empty(t *testing.T) {
+	cfg := parseFlags([]string{"-p", "hello"})
+	if cfg.Process.SessionID != "" {
+		t.Errorf("Process.SessionID = %q, want empty", cfg.Process.SessionID)
 	}
 }
 

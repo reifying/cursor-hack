@@ -73,7 +73,7 @@ func run(ctx context.Context, cfg Config) error {
 		return fmt.Errorf("reading prompt: %w", err)
 	}
 
-	var sessionID string
+	sessionID := cfg.Process.SessionID // pre-seeded if --resume was passed
 	for {
 		// Value copy of process.Config. Safe because the loop only sets
 		// Prompt and SessionID (both strings). ExtraFlags is a shared
