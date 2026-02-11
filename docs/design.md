@@ -180,8 +180,8 @@ type Config struct {
 func Start(ctx context.Context, cfg Config) (*Session, error)
 
 // Session represents a running cursor-agent process.
+// Stdin is not exposed — it is written and closed during Start().
 type Session struct {
-    Stdin  io.WriteCloser
     Stdout io.ReadCloser
     Stderr io.ReadCloser
     Cmd    *exec.Cmd
@@ -194,7 +194,47 @@ func (s *Session) Kill(reason string) error
 func (s *Session) Wait() (*os.ProcessState, error)
 ```
 
-The wrapper always adds `--print --output-format stream-json` to the cursor-agent invocation. The caller's prompt is piped to stdin, then stdin is closed to signal end of input.
+The wrapper always adds `--print --output-format stream-json` to the cursor-agent invocation.
+
+#### Prompt delivery
+
+`Start()` writes the prompt to cursor-agent's stdin and immediately closes it:
+
+```go
+func Start(ctx context.Context, cfg Config) (*Session, error) {
+    cmd := exec.CommandContext(ctx, cfg.AgentBin, buildArgs(cfg)...)
+    stdin, err := cmd.StdinPipe()
+    if err != nil { return nil, fmt.Errorf("stdin pipe: %w", err) }
+
+    stdout, err := cmd.StdoutPipe()
+    if err != nil { return nil, fmt.Errorf("stdout pipe: %w", err) }
+
+    stderr, err := cmd.StderrPipe()
+    if err != nil { return nil, fmt.Errorf("stderr pipe: %w", err) }
+
+    if err := cmd.Start(); err != nil {
+        return nil, fmt.Errorf("starting cursor-agent: %w", err)
+    }
+
+    // Write prompt and close stdin. cursor-agent reads stdin to EOF
+    // to capture the prompt. If stdin is not closed, the agent hangs
+    // waiting for more input — which would look like an agent hang
+    // to the monitor.
+    if _, err := io.WriteString(stdin, cfg.Prompt); err != nil {
+        // Best-effort kill; process may not have read anything yet.
+        _ = cmd.Process.Kill()
+        return nil, fmt.Errorf("writing prompt to stdin: %w", err)
+    }
+    if err := stdin.Close(); err != nil {
+        _ = cmd.Process.Kill()
+        return nil, fmt.Errorf("closing stdin: %w", err)
+    }
+
+    return &Session{Stdout: stdout, Stderr: stderr, Cmd: cmd}, nil
+}
+```
+
+Note: `Session` no longer exposes `Stdin` since it is always closed during `Start()`. The caller never needs to write to it after the prompt is delivered.
 
 ### Event Reader (`internal/events/`)
 
@@ -249,6 +289,14 @@ func NewMonitor(idleTimeout, toolGrace time.Duration, opts ...Option) *Monitor
 // synchronously — hangs are detected by CheckTimeout.
 func (m *Monitor) ProcessEvent(ev AnnotatedEvent) Verdict
 
+// Now returns the current time from the monitor's clock.
+// Callers should use this instead of time.Now() to keep production
+// and test code on the same path.
+func (m *Monitor) Now() time.Time
+
+// SessionDone reports whether the result event has been received.
+func (m *Monitor) SessionDone() bool
+
 // CheckTimeout evaluates whether the current silence duration
 // constitutes a hang given the current state.
 // Called periodically by the orchestrator on a timer tick.
@@ -256,33 +304,54 @@ func (m *Monitor) CheckTimeout(now time.Time) (Verdict, Reason)
 
 // Reason provides structured context for a verdict.
 type Reason struct {
-    SilenceMS       int64
+    IdleSilenceMS   int64            // ms since last event of any kind
     OpenCallCount   int
-    MaxToolTimeout  int64    // ms, from the longest-running open tool
     LastEventType   string
-    OpenCommands    []string // shell commands currently running
+    OpenCalls       []OpenCallDetail // details for each open tool call
+}
+
+// OpenCallDetail captures per-tool timing for diagnostic logging.
+type OpenCallDetail struct {
+    CallID    string
+    Command   string // shell command, empty for non-shell tools
+    ElapsedMS int64  // ms since this tool's started event
+    TimeoutMS int64  // declared timeout (0 if unknown)
 }
 ```
 
 #### Decision logic in `CheckTimeout`
 
 ```
-elapsed = now - state.LastEventAt
+idleElapsed = now - state.LastEventAt
 
 if state.SessionDone:
     return VerdictOK  // session completed normally
 
 if len(state.OpenCalls) == 0:
-    if elapsed > idleTimeout:
+    if idleElapsed > idleTimeout:
         return VerdictHang, reason  // nothing running, silence too long
     return VerdictOK
 
-// Tools are running. Find the one with the longest allowed runtime.
-maxAllowed = max(tool.TimeoutMS for tool in state.OpenCalls) + toolGrace
-if elapsed > maxAllowed:
-    return VerdictHang, reason  // all tools have exceeded their timeout + grace
+// Tools are running. Check each tool against its own start time.
+// A hang is declared only when ALL open tools have exceeded their
+// individual deadline (timeout + grace measured from StartedAt).
+allExpired = true
+for tool in state.OpenCalls:
+    toolElapsed = now - tool.StartedAt
+    toolDeadline = tool.TimeoutMS + toolGrace
+    if tool.TimeoutMS == 0:
+        // Non-shell tool with no declared timeout — use idleTimeout as fallback
+        toolDeadline = idleTimeout
+    if toolElapsed <= toolDeadline:
+        allExpired = false
+        break
+
+if allExpired:
+    return VerdictHang, reason
 return VerdictWaiting
 ```
+
+This per-tool measurement is critical for correctness. If tool A starts at T=0 with a 10s timeout, and tool B starts at T=8 with a 10s timeout, measuring from `LastEventAt` (T=8) would prematurely declare A as within bounds at T=18, or worse, reset A's clock entirely. By measuring each tool from its own `StartedAt`, we get accurate per-tool deadlines regardless of when other events arrive.
 
 #### Default thresholds
 
@@ -315,6 +384,16 @@ The file sink writes JSONL. The console sink writes human-readable text. Both ar
 
 The file is opened in append mode with `O_SYNC` to minimize data loss on crash. Filename format: `cursor-wrap-{start_ts}-{session_id}.jsonl`. If session_id is not yet known (before system/init), the file starts with a placeholder and is renamed once the session_id arrives.
 
+#### Timestamp serialization
+
+All timestamps in log output use **Unix milliseconds (int64)**, matching cursor-agent's own `timestamp_ms` field. This makes it trivial to diff wrapper receive times against agent-reported times with simple arithmetic:
+
+```json
+{"level":"DEBUG","msg":"event_received","recv_ts":1770823845400,"agent_ts":1770823845357,"type":"tool_call","subtype":"started"}
+```
+
+The `AnnotatedEvent.RecvTime` field is `time.Time` internally for clean Go APIs, but serialized as `recv_ts` (epoch millis) when written to the log file. Conversion: `ev.RecvTime.UnixMilli()`.
+
 ### Orchestrator (in `cmd/cursor-wrap/main.go`)
 
 The main function wires the components together:
@@ -327,22 +406,26 @@ func run(ctx context.Context, cfg Config) error {
     sess, err := process.Start(ctx, cfg.Process)
     if err != nil { return err }
 
-    events := make(chan events.AnnotatedEvent, 64)
+    eventCh := make(chan events.AnnotatedEvent, 64)
     mon := monitor.NewMonitor(cfg.IdleTimeout, cfg.ToolGrace)
 
     // Goroutine: read stdout → parse → channel
-    go events.Reader(ctx, sess.Stdout, events)
+    go events.Reader(ctx, sess.Stdout, eventCh)
 
-    // Goroutine: periodic timeout check
+    // Goroutine: drain stderr to prevent pipe buffer deadlock.
+    // Stderr mirrors stdout in stream-json mode; we log it at debug
+    // level but do not parse or forward it.
+    go drainStderr(ctx, sess.Stderr, log)
+
     ticker := time.NewTicker(cfg.TickInterval)
     defer ticker.Stop()
 
     for {
         select {
-        case ev, ok := <-events:
+        case ev, ok := <-eventCh:
             if !ok {
                 // Stream closed (process exited or EOF)
-                return handleStreamEnd(sess, mon, log)
+                return handleStreamEnd(ctx, sess, mon, log)
             }
             logRawEvent(log, ev)
             forwardToStdout(ev.Raw)
@@ -350,7 +433,7 @@ func run(ctx context.Context, cfg Config) error {
             logVerdict(log, verdict, ev)
 
         case <-ticker.C:
-            verdict, reason := mon.CheckTimeout(time.Now())
+            verdict, reason := mon.CheckTimeout(mon.Now())
             if verdict == monitor.VerdictHang {
                 log.Error("hang detected", reasonAttrs(reason)...)
                 return sess.Kill(reason.String())
@@ -361,14 +444,49 @@ func run(ctx context.Context, cfg Config) error {
         }
     }
 }
+
+// handleStreamEnd is called when the event channel closes (stdout EOF).
+// This means cursor-agent's stdout pipe is closed — the process is exiting
+// or has exited.
+func handleStreamEnd(ctx context.Context, sess *process.Session, mon *monitor.Monitor, log *slog.Logger) error {
+    state, err := sess.Wait()
+    if err != nil {
+        log.Error("process wait failed", "error", err)
+    }
+    exitCode := state.ExitCode()
+    log.Info("cursor-agent exited", "exit_code", exitCode, "session_done", mon.SessionDone())
+
+    if mon.SessionDone() {
+        // result event was received — normal completion
+        return nil
+    }
+    // Stream ended without a result event — abnormal exit
+    return fmt.Errorf("cursor-agent exited (code %d) without emitting a result event: %w",
+        exitCode, ErrAbnormalExit)
+}
+
+// drainStderr reads and discards stderr, logging each line at debug level.
+// This prevents the child process from blocking on a full stderr pipe buffer.
+func drainStderr(ctx context.Context, r io.Reader, log *slog.Logger) {
+    scanner := bufio.NewScanner(r)
+    for scanner.Scan() {
+        log.Debug("stderr", "line", scanner.Text())
+    }
+    if err := scanner.Err(); err != nil && ctx.Err() == nil {
+        log.Warn("stderr read error", "error", err)
+    }
+}
 ```
 
 Key behaviors:
 - Every raw event is logged to file before any processing
 - Every raw event is forwarded to the wrapper's own stdout so callers see the same stream
+- Stderr is drained in a separate goroutine to prevent pipe buffer deadlock; lines are logged at debug level
 - On hang: kill the process, log the full reason, exit with a non-zero status
 - On normal completion (result event received, then EOF): exit 0
+- On abnormal EOF (stream ends without result event): exit with error
 - On context cancellation (e.g. SIGINT to the wrapper): kill the child, exit
+- The monitor's injectable clock (`mon.Now()`) is used for timeout checks, keeping production and test code on the same path
 
 ### CLI Flags (`cmd/cursor-wrap/`)
 
