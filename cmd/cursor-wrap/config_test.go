@@ -59,6 +59,7 @@ func TestParseFlags_AllFlagsParsed(t *testing.T) {
 		"--workspace", "/home/user/project",
 		"--force=false",
 		"--resume", "sess-existing-123",
+		"--prompt-after-hang", "continue",
 		"my prompt here",
 	})
 
@@ -100,6 +101,9 @@ func TestParseFlags_AllFlagsParsed(t *testing.T) {
 	}
 	if cfg.Process.SessionID != "sess-existing-123" {
 		t.Errorf("SessionID = %q, want %q", cfg.Process.SessionID, "sess-existing-123")
+	}
+	if cfg.PromptAfterHang != "continue" {
+		t.Errorf("PromptAfterHang = %q, want %q", cfg.PromptAfterHang, "continue")
 	}
 	if cfg.PositionalPrompt != "my prompt here" {
 		t.Errorf("PositionalPrompt = %q, want %q", cfg.PositionalPrompt, "my prompt here")
@@ -211,6 +215,20 @@ func TestParseFlags_LogDirDefault(t *testing.T) {
 	cfg := parseFlags([]string{})
 	if cfg.Log.Dir == "" {
 		t.Error("Log.Dir should have a default value")
+	}
+}
+
+func TestParseFlags_PromptAfterHang(t *testing.T) {
+	cfg := parseFlags([]string{"--prompt-after-hang", "continue", "hello"})
+	if cfg.PromptAfterHang != "continue" {
+		t.Errorf("PromptAfterHang = %q, want %q", cfg.PromptAfterHang, "continue")
+	}
+}
+
+func TestParseFlags_PromptAfterHang_Empty(t *testing.T) {
+	cfg := parseFlags([]string{"-p", "hello"})
+	if cfg.PromptAfterHang != "" {
+		t.Errorf("PromptAfterHang = %q, want empty", cfg.PromptAfterHang)
 	}
 }
 

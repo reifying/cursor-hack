@@ -73,7 +73,13 @@ func run(ctx context.Context, cfg Config) error {
 		return fmt.Errorf("reading prompt: %w", err)
 	}
 
+	if cfg.Print && cfg.PromptAfterHang != "" {
+		log.Warn("--prompt-after-hang has no effect in -p (print) mode")
+	}
+
 	sessionID := cfg.Process.SessionID // pre-seeded if --resume was passed
+	hangRetries := 0
+	const maxHangRetries = 3
 	for {
 		// Value copy of process.Config. Safe because the loop only sets
 		// Prompt and SessionID (both strings). ExtraFlags is a shared
@@ -98,6 +104,16 @@ func run(ctx context.Context, cfg Config) error {
 			// Interactive: only hangs are recoverable.
 			if errors.Is(result.Err, ErrHangDetected) {
 				fmtr.WriteHangIndicator(result.Reason)
+				if cfg.PromptAfterHang != "" {
+					hangRetries++
+					if hangRetries > maxHangRetries {
+						log.Error("max hang retries exceeded", "retries", hangRetries)
+						return result.Err
+					}
+					prompt = cfg.PromptAfterHang
+					log.Info("using prompt-after-hang", "prompt", prompt, "retry", hangRetries)
+					continue
+				}
 				log.Warn("hang detected, awaiting next prompt")
 			} else {
 				return result.Err // non-recoverable errors exit even in interactive mode

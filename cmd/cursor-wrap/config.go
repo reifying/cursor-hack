@@ -33,6 +33,7 @@ type Config struct {
 
 	// Prompt input
 	PositionalPrompt string        // trailing arg, if any
+	PromptAfterHang  string        // automatic prompt after hang detection
 	PromptReader     *bufio.Reader // wraps os.Stdin
 }
 
@@ -59,6 +60,9 @@ func parseFlags(args []string) Config {
 	// Logging flags
 	logDir := fs.String("log-dir", "", "Directory for session log files")
 	logLevel := fs.String("log-level", "", "Console log level: debug|info|warn|error")
+
+	// Prompt flags
+	promptAfterHang := fs.String("prompt-after-hang", "", "Prompt to send automatically after hang detection (interactive mode only, max 3 retries)")
 
 	// Process flags
 	agentBin := fs.String("agent-bin", "", "Path to cursor-agent binary")
@@ -139,6 +143,7 @@ func parseFlags(args []string) Config {
 			SessionID:  *resume,
 		},
 		PositionalPrompt: positionalPrompt,
+		PromptAfterHang:  *promptAfterHang,
 		PromptReader:     bufio.NewReader(os.Stdin),
 	}
 }

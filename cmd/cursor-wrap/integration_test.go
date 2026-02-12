@@ -354,6 +354,55 @@ func TestIntegration_HangRecoveryInteractive(t *testing.T) {
 	}
 }
 
+// --- Integration test: Hang recovery with --prompt-after-hang ---
+
+func TestIntegration_HangRecoveryWithPromptAfterHang(t *testing.T) {
+	logDir := t.TempDir()
+
+	// Only provide one prompt via stdin — the second prompt comes from --prompt-after-hang.
+	stdinContent := "hang prompt\n"
+
+	cmd := exec.Command(wrapperBin,
+		"--agent-bin", fakeAgentBin,
+		"--idle-timeout", "1s",
+		"--tool-grace", "1s",
+		"--tick-interval", "500ms",
+		"--log-dir", logDir,
+		"--output-format", "stream-json",
+		"--prompt-after-hang", "continue",
+	)
+	cmd.Env = append(os.Environ(), "FAKE_AGENT_SCENARIO=hang_then_normal")
+	cmd.Stdin = strings.NewReader(stdinContent)
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		t.Fatalf("wrapper should exit 0 after auto-recovery: %v\nstderr: %s",
+			err, stderr.String())
+	}
+
+	output := stdout.String()
+
+	// Should contain a hang indicator from the first turn.
+	if !strings.Contains(output, "hang_detected") {
+		t.Errorf("expected hang_detected event in output:\n%s", output)
+	}
+
+	// Should contain a result event from the second (auto-recovered) turn.
+	if !strings.Contains(output, `"type":"result"`) {
+		t.Errorf("expected result event from second turn in output:\n%s", output)
+	}
+
+	// Verify the auto-prompt was logged.
+	logContent := readLogFile(t, logDir)
+	if !strings.Contains(logContent, "using prompt-after-hang") {
+		t.Errorf("expected 'using prompt-after-hang' in log file\nlog:\n%s", logContent)
+	}
+}
+
 // --- Integration test: Log file output (AC #6, #7) ---
 
 func TestIntegration_LogFileOutput(t *testing.T) {
