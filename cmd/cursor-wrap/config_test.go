@@ -60,6 +60,7 @@ func TestParseFlags_AllFlagsParsed(t *testing.T) {
 		"--force=false",
 		"--resume", "sess-existing-123",
 		"--prompt-after-hang", "continue",
+		"--max-hang-retries", "5",
 		"my prompt here",
 	})
 
@@ -104,6 +105,9 @@ func TestParseFlags_AllFlagsParsed(t *testing.T) {
 	}
 	if cfg.PromptAfterHang != "continue" {
 		t.Errorf("PromptAfterHang = %q, want %q", cfg.PromptAfterHang, "continue")
+	}
+	if cfg.MaxHangRetries != 5 {
+		t.Errorf("MaxHangRetries = %d, want %d", cfg.MaxHangRetries, 5)
 	}
 	if cfg.PositionalPrompt != "my prompt here" {
 		t.Errorf("PositionalPrompt = %q, want %q", cfg.PositionalPrompt, "my prompt here")
@@ -229,6 +233,20 @@ func TestParseFlags_PromptAfterHang_Empty(t *testing.T) {
 	cfg := parseFlags([]string{"-p", "hello"})
 	if cfg.PromptAfterHang != "" {
 		t.Errorf("PromptAfterHang = %q, want empty", cfg.PromptAfterHang)
+	}
+}
+
+func TestParseFlags_MaxHangRetries(t *testing.T) {
+	cfg := parseFlags([]string{"--max-hang-retries", "10", "hello"})
+	if cfg.MaxHangRetries != 10 {
+		t.Errorf("MaxHangRetries = %d, want %d", cfg.MaxHangRetries, 10)
+	}
+}
+
+func TestParseFlags_MaxHangRetries_Default(t *testing.T) {
+	cfg := parseFlags([]string{})
+	if cfg.MaxHangRetries != 3 {
+		t.Errorf("MaxHangRetries = %d, want %d", cfg.MaxHangRetries, 3)
 	}
 }
 

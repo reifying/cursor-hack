@@ -79,7 +79,6 @@ func run(ctx context.Context, cfg Config) error {
 
 	sessionID := cfg.Process.SessionID // pre-seeded if --resume was passed
 	hangRetries := 0
-	const maxHangRetries = 3
 	for {
 		// Value copy of process.Config. Safe because the loop only sets
 		// Prompt and SessionID (both strings). ExtraFlags is a shared
@@ -106,7 +105,7 @@ func run(ctx context.Context, cfg Config) error {
 				fmtr.WriteHangIndicator(result.Reason)
 				if cfg.PromptAfterHang != "" {
 					hangRetries++
-					if hangRetries > maxHangRetries {
+					if hangRetries > cfg.MaxHangRetries {
 						log.Error("max hang retries exceeded", "retries", hangRetries)
 						return result.Err
 					}
